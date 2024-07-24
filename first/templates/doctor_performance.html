@@ -132,7 +132,7 @@
                     labels: weeklyAvgServiceTimeData.map(item => item.scheduled_by__name),
                     datasets: [{
                         label: 'Avg Service Time (minutes)',
-                        data: weeklyAvgServiceTimeData.map(item => item.avg_service_time / 60000), // convert milliseconds to minutes to easy use
+                        data: weeklyAvgServiceTimeData.map(item => item.avg_service_time / 60000), // convert time milliseconds to minutes to easy use
                         backgroundColor: getColors(weeklyAvgServiceTimeData.length),
                         borderColor: 'rgba(255, 159, 64, 1)',
                         borderWidth: 1
