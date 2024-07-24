@@ -1,0 +1,14 @@
+Patient Name: Sahil Sharma
+Gender: female
+Age: 0
+Is Pregnant: true
+Follow-up: true
+Temperature: 123.0
+Heart Rate: 72
+Primary Complaints: 
+Cough: true
+Body Pain: true
+Headache: None
+Last Doctor: Dr. Sunil Kumar
+Last Appointment Date: 2024-06-18
+Remarks: n/a

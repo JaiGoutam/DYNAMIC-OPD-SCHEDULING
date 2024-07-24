@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Appointments</title>
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Back button -->
+        <a href="{% url 'receptionist_dashboard' %}" class="button is-info">Back to Receptionist Dashboard</a>
+
+        <h2 class="title is-2">All Appointments</h2>
+        
+        <!-- Date filter form -->
+        <form method="GET" action="{% url 'all_appointments' %}">
+            <div class="field">
+                <label class="label">Filter by Date</label>
+                <div class="control">
+                    <input type="date" name="date" class="input" value="{{ selected_date|date:'Y-m-d' }}" 
+                           {% if selected_date and selected_date.lower == 'all' %} disabled {% endif %}>
+                </div>
+                <div class="control">
+                    <label class="checkbox">
+                        <input type="checkbox" id="all-dates" name="date" value="all" 
+                               {% if not selected_date or selected_date.lower == 'all' %} checked {% endif %}> All Dates
+                    </label>
+                </div>
+                <div class="control">
+                    <button type="submit" class="button is-primary">Filter</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Queue Position</th>
+                    <th>Patient Name</th>
+                    <th>Date</th>
+                    <th>Scheduled By</th>
+                    <th>Status</th>
+                    <th>Appointment File</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in all_appointments %}
+                    <tr>
+                        <td>{{ appointment.queue_position }}</td>
+                        <td>{{ appointment.patient.name }}</td>
+                        <td>{{ appointment.date }}</td>
+                        <td>{{ appointment.scheduled_by.name }}</td>
+                        <td>{{ appointment.is_completed|yesno:"Completed,Not Completed" }}</td>
+                        <td>
+                            {% if appointment.appointment_file %}
+                                <a href="{% url 'show_appointment_file' appointment.id %}" target="_blank">View File</a>
+                            {% else %}
+                                No File
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6">No appointments found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bulma JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/js/bulma.min.js"></script>
+    <script>
+        document.getElementById('all-dates').addEventListener('change', function () {
+            const dateInput = document.querySelector('input[type="date"]');
+            if (this.checked) {
+                dateInput.value = '';
+                dateInput.disabled = true;
+            } else {
+                dateInput.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

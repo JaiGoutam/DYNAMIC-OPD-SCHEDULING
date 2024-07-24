@@ -1,0 +1,12 @@
+Patient Name: hapie tiwana
+Gender: male
+Age: 20
+Is Pregnant: None
+Follow-up: true
+Temperature: 
+Heart Rate: 
+Primary Complaints: 
+Cough: None
+Body Pain: None
+Headache: None
+Remarks: n/a

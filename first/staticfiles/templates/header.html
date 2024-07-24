@@ -1,0 +1,40 @@
+{% load static %}
+
+<header class="header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-2">
+        <img src="{% static 'unnamed (1).jpg' %}" alt="JC" class="img-fluid">
+      </div>
+      <div class="col-md-10 text-center">
+        <h1>MedicoManage</h1>
+        {% csrf_token %}
+        <p>Welcome, {{ pt.name }}!</p>
+      </div>
+    </div>
+  </div>
+  <style>
+    .header {
+      background-color: #000;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .header img {
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .header p {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+  </style>
+</header>

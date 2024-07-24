@@ -1,0 +1,11 @@
+Patient Name: Aryan Singh
+Gender: male
+Age: 16
+Is Pregnant: None
+Follow-up: None
+Temperature: 123.0
+Heart Rate: 72
+Primary Complaints: 
+Cough: true
+Body Pain: true
+Headache: None

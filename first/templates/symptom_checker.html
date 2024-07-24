@@ -1,0 +1,58 @@
+<!-- templates/symptom_checker.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Symptom Checker</title>
+</head>
+<body>
+    <h1>Symptom Checker</h1>
+    <form id="symptomForm">
+        <label for="symptom1">Symptom 1:</label>
+        <input type="text" id="symptom1" name="symptom1"><br>
+        <label for="symptom2">Symptom 2:</label>
+        <input type="text" id="symptom2" name="symptom2"><br>
+        <label for="symptom3">Symptom 3:</label>
+        <input type="text" id="symptom3" name="symptom3"><br>
+        <label for="symptom4">Symptom 4:</label>
+        <input type="text" id="symptom4" name="symptom4"><br>
+        <label for="symptom5">Symptom 5:</label>
+        <input type="text" id="symptom5" name="symptom5"><br>
+        <label for="symptom6">Symptom 6:</label>
+        <input type="text" id="symptom6" name="symptom6"><br>
+        <label for="symptom7">Symptom 7:</label>
+        <input type="text" id="symptom7" name="symptom7"><br>
+        <!-- Add more symptom fields as needed -->
+        <input type="submit" value="Check Disease">
+    </form>
+    <p id="result"></p>
+    <script>
+        document.getElementById('symptomForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let symptoms = {
+                symptom1: document.getElementById('symptom1').value,
+                symptom2: document.getElementById('symptom2').value,
+                symptom3: document.getElementById('symptom3').value,
+                symptom4: document.getElementById('symptom4').value,
+                symptom5: document.getElementById('symptom5').value,
+                symptom6: document.getElementById('symptom6').value,
+                symptom7: document.getElementById('symptom7').value,
+                // Add more symptoms as needed
+            };
+
+            fetch('/symptom_checker/api/symptom_checker/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ symptoms: symptoms })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Predicted Disease: ' + data.predicted_disease;
+            });
+        });
+    </script>
+</body>
+</html>

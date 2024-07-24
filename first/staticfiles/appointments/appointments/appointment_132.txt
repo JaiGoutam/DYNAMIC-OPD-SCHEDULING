@@ -1,0 +1,11 @@
+Patient Name: Sahil Sharma
+Gender: female
+Age: 0
+Is Pregnant: true
+Follow-up: true
+Temperature: 
+Heart Rate: 
+Primary Complaints: 
+Cough: None
+Body Pain: true
+Headache: true

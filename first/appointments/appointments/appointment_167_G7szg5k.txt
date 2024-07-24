@@ -1,0 +1,14 @@
+Patient Name: Jai
+Gender: male
+Age: 22
+Is Pregnant: None
+Follow-up: true
+Temperature: 123.0
+Heart Rate: 72
+Primary Complaints: 
+Cough: None
+Body Pain: None
+Headache: None
+Last Doctor: Dr. Komal Sharma
+Last Appointment Date: 2024-06-19
+Remarks: n/a

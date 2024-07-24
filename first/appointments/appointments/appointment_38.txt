@@ -1,0 +1,6 @@
+Temperature: None
+Heart Rate: 
+Primary Complaints: 
+Cough: true
+Body Pain: None
+Headache: None

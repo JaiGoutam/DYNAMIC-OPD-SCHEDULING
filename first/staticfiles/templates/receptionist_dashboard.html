@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Receptionist Dashboard</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        li {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        li:last-child {
+            border-bottom: none;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #337ab7;
+        }
+        
+        a:hover {
+            color: #23527c;
+        }
+        
+        /* Button Styles */
+        button[type="button"] {
+            background-color: #337ab7;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        button[type="button"]:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        button[type="button"]:hover {
+            background-color: #23527c;
+        }
+        
+        /* Form Styles */
+        form {
+            margin-top: 10px;
+        }
+        
+        input[type="text"], select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+        }
+        
+        input[type="text"]:focus, select:focus {
+            border-color: #337ab7;
+        }
+    </style>
+    
+    <script>
+        function enableButton(buttonId) {
+            document.getElementById(buttonId).disabled = false;
+            document.getElementById(`add_remarks_form_${buttonId.split('_')[2]}`).style.display = 'inline';  // Show the Add Remarks form
+        }
+
+        function addRemarks(appointmentId) {
+            const form = document.getElementById(`add_remarks_form_${appointmentId}`);
+            const remarks = form.elements['remarks'].value;
+            
+            // Make AJAX request to add remarks
+            fetch(`/appointment/${appointmentId}/add_remarks/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: `remarks=${remarks}`
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById(`add_remarks_${appointmentId}`).disabled = true;
+                    document.getElementById(`add_remarks_${appointmentId}`).innerText = 'Remarks Added';
+                    document.getElementById(`assign_doctor_${appointmentId}`).disabled = false;  // Enable the Update Scheduled By button
+                    document.getElementById(`assign_doctor_form_${appointmentId}`).style.display = 'inline';  // Show the Assign Doctor form
+                } else {
+                    console.error('Error adding remarks');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function assignDoctor(appointmentId) {
+            const form = document.getElementById(`assign_doctor_form_${appointmentId}`);
+            
+            // Make AJAX request to assign doctor
+            fetch(`/appointment/${appointmentId}/assign_doctor/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: new URLSearchParams(new FormData(form)).toString()
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Doctor assigned successfully');
+                    location.reload();  // Reload the page after successful assignment
+                } else {
+                    console.error('Error assigning doctor');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>Receptionist Dashboard</h2>
+    
+    
+    <!-- Button to view all appointments -->
+    <a href="{% url 'all_appointments' %}" class="btn btn-primary">View All Appointments</a>
+    <h3>Doctor Load for Today</h3>
+    <ul class="doctor-load">
+        {% for doctor in doctors %}
+            <li>
+                <span class="doctor-name">{{ doctor.name }} - {{ doctor.speciality }}:</span>
+                <span>{{ doctor.current_load }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <h3>Today's Appointments</h3>
+    <ul>
+        {% for appointment in appointments %}
+            <li>
+                {{ appointment.queue_position }}. {{ appointment.patient.name }} - {{ appointment.date }}
+                <a href="{% url 'show_appointment_file' appointment.id %}" target="_blank" onclick="enableButton('add_remarks_{{ appointment.id }}')">View Appointment File</a>
+                
+                <!-- Add Remarks Form -->
+                <form id="add_remarks_form_{{ appointment.id }}" method="POST" style="display: none;">
+                    {% csrf_token %}
+                    <input type="text" name="remarks" placeholder="Add remarks" required>
+                    <button type="button" id="add_remarks_{{ appointment.id }}" onclick="addRemarks({{ appointment.id }})" disabled>Add Remarks</button>
+                </form>
+                
+                <!-- Assign Doctor Form -->
+                <form id="assign_doctor_form_{{ appointment.id }}" method="POST" style="display: none;">
+                    {% csrf_token %}
+                    <select name="scheduled_by" required>
+                        <option value="" disabled selected>Select Doctor</option>
+                        {% for doctor in doctors %}
+                            <option value="{{ doctor.id }}">{{ doctor.name }} - {{ doctor.speciality }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" id="assign_doctor_{{ appointment.id }}" onclick="assignDoctor({{ appointment.id }})" disabled>Update Scheduled By</button>
+                </form>
+                
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        // No additional JavaScript code needed here
+    </script>
+</body>
+</html>

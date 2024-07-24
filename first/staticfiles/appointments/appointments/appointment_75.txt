@@ -1,0 +1,11 @@
+Patient Name: Abhishek Singh
+Gender: male
+Age: 22
+Is Pregnant: None
+Follow-up: None
+Temperature: 123.0
+Heart Rate: 233
+Primary Complaints: no
+Cough: true
+Body Pain: None
+Headache: None

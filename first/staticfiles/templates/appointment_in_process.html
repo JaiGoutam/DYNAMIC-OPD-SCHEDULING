@@ -1,0 +1,64 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment in Process</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            color: #555;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .details {
+            margin-left: 20px;
+        }
+        /* Add more styles as needed */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Appointment in Process</h1>
+        <div class="section-title">Your Appointment Details:</div>
+        <div class="details">
+            <p><strong>Date:</strong> {{ appointment.date }}</p>
+            <p><strong>Patient Name:</strong> {{ appointment.patient.name }}</p>
+            <p><strong>Expected Appointment Time:</strong> {{ appointment.estimated_start_service_time }}</p>
+
+            <!-- Add more appointment details as needed -->
+        </div>
+        <p>You already have an appointment in process. Please wait for it to complete before booking another appointment.</p>
+        <form method="post" action="{% url 'delete_appointment' %}">
+            {% csrf_token %}
+            <input type="hidden" name="appointment_id" value="{{ appointment.id }}">
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+    
+</body>
+</html>
+{% endblock %}

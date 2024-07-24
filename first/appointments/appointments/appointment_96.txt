@@ -1,0 +1,11 @@
+Patient Name: Ankush Pawar
+Gender: male
+Age: 22
+Is Pregnant: None
+Follow-up: None
+Temperature: 123.0
+Heart Rate: 72
+Primary Complaints: 
+Cough: None
+Body Pain: None
+Headache: None

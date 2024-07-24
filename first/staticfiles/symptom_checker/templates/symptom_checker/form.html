@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Symptom Checker Form</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('symptomForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                const symptoms = [
+                    document.getElementById('symptom1').value,
+                    document.getElementById('symptom2').value,
+                    document.getElementById('symptom3').value,
+                    document.getElementById('symptom4').value,
+                    document.getElementById('symptom5').value,
+                    document.getElementById('symptom6').value,
+                    document.getElementById('symptom7').value,
+                ];
+
+                // Load symptom mapping 
+                fetch('/static/symptom_mapping.json')
+                    .then(response => response.json())
+                    .then(symptomMapping => {
+                        const mappedSymptoms = symptoms.map(symptom => symptomMapping[symptom] || symptom);
+
+                        // Submit the form with actual symptom names
+                        fetch('/symptom_checker/api/symptom_checker/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({
+                                symptom1: mappedSymptoms[0],
+                                symptom2: mappedSymptoms[1],
+                                symptom3: mappedSymptoms[2],
+                                symptom4: mappedSymptoms[3],
+                                symptom5: mappedSymptoms[4],
+                                symptom6: mappedSymptoms[5],
+                                symptom7: mappedSymptoms[6],
+                                // Add more symptoms as needed
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Prediction:', data.prediction);
+                            // Update UI with prediction result
+                            document.getElementById('prediction').textContent = 'Predicted Disease: ' + data.prediction;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching symptom mapping:', error);
+                    });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Symptom Checker Form</h1>
+    <form id="symptomForm" method="post">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <label for="symptom1">Symptom 1:</label>
+        <input type="text" id="symptom1" name="symptom1" value=""><br>
+
+        <label for="symptom2">Symptom 2:</label>
+        <input type="text" id="symptom2" name="symptom2" value=""><br>
+
+        <label for="symptom3">Symptom 3:</label>
+        <input type="text" id="symptom3" name="symptom3" value=""><br>
+
+        <label for="symptom4">Symptom 4:</label>
+        <input type="text" id="symptom4" name="symptom4" value=""><br>
+
+        <label for="symptom5">Symptom 5:</label>
+        <input type="text" id="symptom5" name="symptom5" value=""><br>
+
+        <label for="symptom6">Symptom 6:</label>
+        <input type="text" id="symptom6" name="symptom6" value=""><br>
+
+        <label for="symptom7">Symptom 7:</label>
+        <input type="text" id="symptom7" name="symptom7" value=""><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2 id="prediction">Predicted Disease: </h2>
+</body>
+</html>

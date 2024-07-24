@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Schedule</title>
+</head>
+<body>
+    <h1>Doctor Schedule</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="doctor">Select Doctor:</label>
+        <select name="doctor" id="doctor">
+            {% for doctor in doctors %}
+                <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+            {% endfor %}
+        </select>
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" name="date" min="{{ min_date }}" value="{{ today }}">
+        <button type="submit">View Schedule</button>
+    </form>
+</body>
+</html>

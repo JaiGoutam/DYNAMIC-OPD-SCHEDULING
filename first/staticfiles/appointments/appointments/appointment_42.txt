@@ -1,0 +1,11 @@
+Patient Name: pari gupta
+Gender: female
+Age: 20
+Is Pregnant: None
+Follow-up: true
+Temperature: None
+Heart Rate: 72
+Primary Complaints: 
+Cough: true
+Body Pain: None
+Headache: None

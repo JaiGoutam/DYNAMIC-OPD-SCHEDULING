@@ -1,0 +1,13 @@
+Patient Name: Aryan Singh
+Gender: male
+Age: 16
+Is Pregnant: None
+Follow-up: true
+Temperature: 
+Heart Rate: 72
+Primary Complaints: 
+Cough: None
+Body Pain: None
+Headache: None
+Last Doctor: Dr. Arvind Thakur
+Last Appointment Date: 2024-06-11

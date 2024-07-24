@@ -1,0 +1,202 @@
+<!-- doctor_performance.html start -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Performance</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        .chart-row {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .chart-item {
+            width: 45%;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Doctor Performance</h1>
+
+    <div class="chart-container">
+        <div class="chart-row">
+            <div class="chart-item">
+                <h2>Weekly Appointments</h2>
+                <canvas id="weeklyAppointmentsChart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-item">
+                <h2>Monthly Appointments</h2>
+                <canvas id="monthlyAppointmentsChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-item">
+                <h2>Weekly Average Service Time</h2>
+                <canvas id="weeklyAvgServiceTimeChart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-item">
+                <h2>Monthly Average Service Time</h2>
+                <canvas id="monthlyAvgServiceTimeChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const weeklyAppointmentsData = JSON.parse('{{ weekly_appointments_json|escapejs }}');
+            const monthlyAppointmentsData = JSON.parse('{{ monthly_appointments_json|escapejs }}');
+            const weeklyAvgServiceTimeData = JSON.parse('{{ weekly_avg_service_time_json|escapejs }}');
+            const monthlyAvgServiceTimeData = JSON.parse('{{ monthly_avg_service_time_json|escapejs }}');
+
+            const chartOptions = {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Doctor Performance Metrics'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    intersect: false,
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Doctors'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Count'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            };
+
+            const weeklyAppointmentsCtx = document.getElementById('weeklyAppointmentsChart').getContext('2d');
+            new Chart(weeklyAppointmentsCtx, {
+                type: 'bar',
+                data: {
+                    labels: weeklyAppointmentsData.map(item => item.scheduled_by__name),
+                    datasets: [{
+                        label: '# of Appointments',
+                        data: weeklyAppointmentsData.map(item => item.appointment_count),
+                        backgroundColor: getColors(weeklyAppointmentsData.length),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: chartOptions
+            });
+
+            const monthlyAppointmentsCtx = document.getElementById('monthlyAppointmentsChart').getContext('2d');
+            new Chart(monthlyAppointmentsCtx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyAppointmentsData.map(item => item.scheduled_by__name),
+                    datasets: [{
+                        label: '# of Appointments',
+                        data: monthlyAppointmentsData.map(item => item.appointment_count),
+                        backgroundColor: getColors(monthlyAppointmentsData.length),
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: chartOptions
+            });
+
+            const weeklyAvgServiceTimeCtx = document.getElementById('weeklyAvgServiceTimeChart').getContext('2d');
+            new Chart(weeklyAvgServiceTimeCtx, {
+                type: 'bar',
+                data: {
+                    labels: weeklyAvgServiceTimeData.map(item => item.scheduled_by__name),
+                    datasets: [{
+                        label: 'Avg Service Time (minutes)',
+                        data: weeklyAvgServiceTimeData.map(item => item.avg_service_time / 60000), // convert milliseconds to minutes
+                        backgroundColor: getColors(weeklyAvgServiceTimeData.length),
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    ...chartOptions,
+                    scales: {
+                        x: chartOptions.scales.x,
+                        y: {
+                            ...chartOptions.scales.y,
+                            title: {
+                                display: true,
+                                text: 'Avg Service Time (minutes)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const monthlyAvgServiceTimeCtx = document.getElementById('monthlyAvgServiceTimeChart').getContext('2d');
+            new Chart(monthlyAvgServiceTimeCtx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyAvgServiceTimeData.map(item => item.scheduled_by__name),
+                    datasets: [{
+                        label: 'Avg Service Time (minutes)',
+                        data: monthlyAvgServiceTimeData.map(item => item.avg_service_time / 60000), // convert milliseconds to minutes
+                        backgroundColor: getColors(monthlyAvgServiceTimeData.length),
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    ...chartOptions,
+                    scales: {
+                        x: chartOptions.scales.x,
+                        y: {
+                            ...chartOptions.scales.y,
+                            title: {
+                                display: true,
+                                text: 'Avg Service Time (minutes)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            function getColors(count) {
+                const colors = [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(231, 233, 237, 0.2)',
+                    'rgba(119, 221, 119, 0.2)',
+                    'rgba(176, 119, 221, 0.2)',
+                    'rgba(255, 141, 186, 0.2)',
+                ];
+                return colors.slice(0, count);
+            }
+        });
+    </script>
+</body>
+</html>

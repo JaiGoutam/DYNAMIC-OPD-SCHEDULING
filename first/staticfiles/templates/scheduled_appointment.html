@@ -1,0 +1,99 @@
+
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Schedule an Appointment</h1>
+    <form id="appointment-form" method="post" action="{% url 'book_appointment' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="date">Select Date:</label>
+            <input type="date" class="form-control" id="date-input" name="date">
+        </div>
+        <div class="form-group">
+            <label for="temperature">Temperature</label>
+            <input type="text" class="form-control" id="temperature" name="temperature">
+        </div>
+        
+        <div class="location-selector">
+          <label>Location:</label><br>
+          <input type="radio" id="locationA" name="location" value="A">
+          <label for="locationA">Location A</label>
+          <input type="radio" id="locationB" name="location" value="B">
+          <label for="locationB">Location B</label>
+          <input type="radio" id="locationC" name="location" value="C">
+          <label for="locationC">Location C</label>
+          <input type="radio" id="locationD" name="location" value="D">
+          <label for="locationD">Location D</label>
+          <input type="radio" id="locationE" name="location" value="E">
+          <label for="locationE">Location E</label>
+        </div>
+        <div class="form-group">
+            <label for="heart_rate">Heart Rate</label>
+            <input type="text" class="form-control" id="heart_rate" name="heart_rate">
+        </div>
+        <div class="form-group">
+            <label for="symptoms">Symptoms</label>
+            <input type="text" class="form-control" id="symptoms" name="symptoms">
+        </div>
+        <div class="form-group">
+            <label for="primary_complaints">Primary Complaints</label>
+            <input type="text" class="form-control" id="primary_complaints" name="primary_complaints">
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" id="cough" name="cough">
+            <label class="form-check-label" for="cough">Cough</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" id="body_pain" name="body_pain">
+            <label class="form-check-label" for="body_pain">Body Pain</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" id="headache" name="headache">
+            <label class="form-check-label" for="headache">Headache</label>
+        </div>
+        {% if patient.gender == 'female' %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" id="is_pregnant" name="is_pregnant">
+            <label class="form-check-label" for="is_pregnant">Is Pregnant</label>
+        </div>
+        {% endif %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" id="follow_up" name="follow_up">
+            <label class="form-check-label" for="follow_up">Follow-up Appointment</label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" id="consent" name="consent" required>
+            <label class="form-check-label" for="consent">I consent to the terms and conditions</label>
+        </div>
+
+        
+        <button type="submit" class="btn btn-primary" id="submit-btn">Book Appointment</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+
+        $('#appointment-form').submit(function(event) {
+            // Ensure all required fields are filled
+            if (!$('#date-input').val() || !$('input[name="location"]:checked').val()) {
+                event.preventDefault();
+                alert('Please fill all required fields.');
+            }
+        });
+    });
+</script>
+
+{% endblock %}
+
+
+
+
+
+

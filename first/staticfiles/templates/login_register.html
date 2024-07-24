@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login/Register</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .phone-screen {
+            width: 360px;
+            height: 750px; /* Adjusted height */
+            background: #fff; /* White background */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 40px; /* More prominent corner rounding */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .ellipse {
+            width: 100%;
+            height: 150px; /* Increased height to cover the top */
+            background: #000; /* Black ellipse */
+            border-top-left-radius: 40px; /* Matching container radius */
+            border-top-right-radius: 40px; /* Matching container radius */
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            box-sizing: border-box;
+        }
+        .ellipse h1 {
+            font-size: 2em; /* Increased font size */
+            color: #fff;
+            margin: 0;
+            font-family: 'Roboto', sans-serif; /* New font */
+            letter-spacing: 2px;
+            text-align: left; /* Align text to the left */
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            margin-top: 20px; /* Spacing below the ellipse */
+            flex-grow: 1; /* Allow container to grow and center content */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        p {
+            font-size: 1em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        button {
+            background: linear-gradient(45deg, #ff6f61, #de1a1a);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            margin: 10px auto; /* Center buttons horizontally */
+            width: 80%; /* Set width for centering */
+            display: block;
+        }
+        button:hover {
+            background: linear-gradient(45deg, #de1a1a, #ff6f61);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-screen">
+        <div class="ellipse">
+            <h1>MedicoManage</h1>
+        </div>
+        <div class="container">
+            <p>Please choose an option:</p>
+            {% csrf_token %}
+            <button onclick="location.href='{% url 'login' %}';">Login</button>
+            <button onclick="location.href='{% url 'register' %}';">Register</button>
+        </div>
+    </div>
+</body>
+</html>

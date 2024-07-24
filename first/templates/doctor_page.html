@@ -1,0 +1,137 @@
+<!-----iibdnocbdsoivbdosiv----->
+<!--------vekjvck---------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Page</title>
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <!-- Doctor's information -->
+            <div class="box">
+                <h1 class="title">Welcome, {{ doctor.name }}</h1>
+                <p class="subtitle">Speciality: {{ doctor.speciality }}</p>
+            </div>
+
+            <!-- Appointments Section -->
+            <div class="box">
+                <h2 class="title is-4">Appointments</h2>
+                <button id="toggleAppointments" class="button is-primary">Toggle Appointments</button>
+                <div id="appointmentsContainer" style="display: none;">
+                    {% if appointments %}
+                        <ul>
+                            {% for appointment in appointments %}
+                                <li class="box">
+                                    <p><strong>Queue Position:</strong> {{ appointment.queue_position }}</p>
+                                    <p><strong>Patient Name:</strong> {{ appointment.patient.name }}</p>
+                                    <p><strong>Location Wait Time:</strong> {{ appointment.location_wait_time }} minutes</p>
+                                    <p><strong>Expected arrival time:</strong> {{ appointment.estimated_start_service_time }}</p>
+                                    <p><strong>Appointment Booked Time:</strong> {{ appointment.arrival_time }}</p>
+                                    <button class="button is-link is-small" onclick="viewAppointmentFile('{{ appointment.id }}')">View File</button>
+                                    {% if appointment.is_completed %}
+                                        <button class="button is-success is-small" disabled>Completed</button>
+                                    {% else %}
+                                        {% if appointment.service_start_time %}
+                                            <button class="button is-success is-small markAppointment" data-appointment-id="{{ appointment.id }}">Mark as Completed</button>
+                                        {% else %}
+                                            <button class="button is-primary is-small startAppointment" data-appointment-id="{{ appointment.id }}">Start Appointment</button>
+                                            <button class="button is-warning is-small completeAppointment" data-appointment-id="{{ appointment.id }}" style="display: none;">Complete Appointment</button>
+                                        {% endif %}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No appointments in the queue.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bulma JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/js/bulma.min.js"></script>
+
+    <!-- JavaScript to handle AJAX requests -->
+    <script>
+        function viewAppointmentFile(appointmentId) {
+            window.location.href = '/view_appointment_file/' + appointmentId;
+        }
+
+        // Function to toggle visibility of appointments container
+        document.getElementById("toggleAppointments").addEventListener("click", function() {
+            var appointmentsContainer = document.getElementById("appointmentsContainer");
+            if (appointmentsContainer.style.display === "none") {
+                appointmentsContainer.style.display = "block";
+            } else {
+                appointmentsContainer.style.display = "none";
+            }
+        });
+
+        // AJAX to start appointment
+        $('.startAppointment').click(function() {
+            var appointmentId = $(this).data('appointment-id');
+            var doctorId = {{ doctor.id }};  // Get the doctor ID from the context
+            const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+            var appointmentElement = $(this).closest('li'); // Get the parent <li> element of the clicked button
+            $.ajax({
+                url: '/start_appointment/',
+                type: 'POST',
+                data: {
+                    appointment_id: appointmentId,
+                    doctor_id: doctorId  // Pass the doctor ID along with appointment ID
+                },
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        // Disable the start button and enable the complete button
+                        appointmentElement.find('.startAppointment').prop('disabled', true);
+                        appointmentElement.find('.completeAppointment').show();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+
+        // AJAX to mark appointment as completed
+        $('.completeAppointment').click(function() {
+            var appointmentId = $(this).data('appointment-id');
+            var doctorId = {{ doctor.id }};  // Get the doctor ID from the context
+            const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+            var appointmentElement = $(this).closest('li'); // Get the parent <li> element of the clicked button
+            $.ajax({
+                url: '/mark_completed/',
+                type: 'POST',
+                data: {
+                    appointment_id: appointmentId,
+                    doctor_id: doctorId  // Pass the doctor ID along with appointment ID
+                },
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        // Remove the appointment from the list
+                        appointmentElement.fadeOut(function() {
+                            appointmentElement.remove();
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

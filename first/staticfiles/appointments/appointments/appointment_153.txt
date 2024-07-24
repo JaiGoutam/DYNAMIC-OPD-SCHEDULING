@@ -1,0 +1,12 @@
+Patient Name: pari
+Gender: male
+Age: 21
+Is Pregnant: None
+Follow-up: None
+Temperature: 
+Heart Rate: 72
+Primary Complaints: 
+Cough: None
+Body Pain: true
+Headache: true
+Remarks: n/a

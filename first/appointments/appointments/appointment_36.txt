@@ -1,0 +1,6 @@
+Temperature: None
+Heart Rate: 72
+Primary Complaints: 
+Cough: None
+Body Pain: None
+Headache: None

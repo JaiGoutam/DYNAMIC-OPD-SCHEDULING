@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h1>Free Slots for {{ selected_day }} for {{ selected_doctor }}</h1>
+    <ul>
+      {% for slot in free_slots %}
+        <li>{{ slot.start_time }} - {{ slot.end_time }}</li>
+      {% empty %}
+        <li>No free slots available</li>
+      {% endfor %}
+    </ul>
+    <form method="post" action="{% url 'book_appointment' %}">
+      {% csrf_token %}
+      <input type="hidden" name="doctor" value="{{ selected_doctor.id }}">
+      <input type="hidden" name="day" value="{{ selected_day }}">
+      <button type="submit">Book Appointment</button>
+    </form>
+  </div>
+{% endblock %}
